@@ -112,6 +112,14 @@ public:
 	///查持仓
 	void qryPosition(vector<PriceData *> vData);
 
+	///查询持仓
+	void qryPosition(const char* instrumentId);
+
+	///平仓
+	void closePosition();
+
+	///查询持仓并且平仓
+	void qryAndClosePosition(vector<PriceData *> vData);
 
 private:
 

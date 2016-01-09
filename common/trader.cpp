@@ -304,9 +304,9 @@ int Trader::qryOrder(const char* instrumentId)
 	return NoTradedNumber;
 }
 
-///查询持仓，然后平仓
+///废弃  查询持仓，然后平仓 
 void Trader::qryPosition(vector<PriceData *> vData)
-{	
+{
 	ResetEvent(g_hEvent);
 	CThostFtdcQryInvestorPositionField QryInvestorPosition;
 	memset(&QryInvestorPosition, 0, sizeof(QryInvestorPosition));
@@ -355,6 +355,7 @@ void Trader::qryPosition(vector<PriceData *> vData)
 				sendOrder(Position[i].InstrumentID.c_str(), buySell, 3, leftVolume, closePrice);
 			}			
 		}
+		///昨仓不平
 		if (false)  ///平昨 Position[i].YdPosition > 0
  		{
 			int temp = Position[i].YdPosition / 100;
@@ -371,4 +372,89 @@ void Trader::qryPosition(vector<PriceData *> vData)
 		}
 	}
 	std::cout << "--------平仓完成--------" << std::endl;
+}
+
+///查询持仓
+void Trader::qryPosition(const char* instrumentId)
+{
+	ResetEvent(g_hEvent);
+	CThostFtdcQryInvestorPositionField QryInvestorPosition;
+	memset(&QryInvestorPosition, 0, sizeof(QryInvestorPosition));
+	strcpy(QryInvestorPosition.BrokerID, brokerId.c_str());
+	strcpy(QryInvestorPosition.InvestorID, userId.c_str());
+	strcpy(QryInvestorPosition.InstrumentID, instrumentId);
+	int rtn = tradeApi->ReqQryInvestorPosition(&QryInvestorPosition, ++reqId);
+	std::cerr << "---->>>发送查询持仓请求" << ((rtn == 0) ? "成功":"失败") << std::endl;
+	WaitForSingleObject(g_hEvent, INFINITE);
+}
+
+///平仓
+void Trader::closePosition()
+{
+	for (int i=0; i<Position.size(); i++)
+	{
+		double closePrice = 0.0;
+		string key = Position[i].InstrumentID;
+		std::map< std::string, CThostFtdcDepthMarketDataField >::iterator mit = FirstDepthMarketData.find(key);
+		if (mit == FirstDepthMarketData.end())
+		{
+			std::cout << "can not find depthmarketdata for " << mit->first << std::endl;
+			closePrice = 0.0;
+		}
+		else 
+		{
+			closePrice = (mit->second).LastPrice;
+		}
+		if (closePrice == 0.0)
+		{
+			closePrice = getLowerLimitPrice(Position[i].InstrumentID.c_str());
+			Sleep(1000);
+		}
+		/// Direction;  //2、多，3、空
+		///buySell 买卖方向 0.买  1.卖
+		int buySell = (Position[i].Direction == 2 ? 1:0);
+		///openClose 开平标志  0.开仓   1.平仓  3.平今  4.平昨
+		if (Position[i].Position > 0)  ///平今
+		{
+			int temp = Position[i].Position / 100;
+			int leftVolume = Position[i].Position % 100;
+			for (int k=0; k<temp; k++)
+			{
+				sendOrder(Position[i].InstrumentID.c_str(), buySell, 3, 100, closePrice);
+				Sleep(100);
+			}
+			if (leftVolume > 0)
+			{
+				sendOrder(Position[i].InstrumentID.c_str(), buySell, 3, leftVolume, closePrice);
+			}			
+		}
+		///昨仓不平
+		if (false)  ///平昨 Position[i].YdPosition > 0
+ 		{
+			int temp = Position[i].YdPosition / 100;
+			int leftVolume = Position[i].YdPosition % 100;
+			for (int k=0; k<temp; k++)
+			{
+				sendOrder(Position[i].InstrumentID.c_str(), buySell, 4, 100, closePrice);
+				Sleep(100);
+			}
+			if (leftVolume > 0)
+			{
+				sendOrder(Position[i].InstrumentID.c_str(), buySell, 4, leftVolume, closePrice);
+			}		
+		}
+	}
+	std::cout << "--------平仓完成--------" << std::endl;
+}
+
+///查询持仓并且平仓
+void Trader::qryAndClosePosition(vector<PriceData *> vData)
+{
+	for (int i=0; i<vData.size(); i++)
+	{
+		qryPosition(vData[i]->InstrumentId);
+		Sleep(1000);  ///CTP限制每秒只能发起一次查询
+		closePosition();
+		vector<PositionActionPackage>().swap(Position);
+	}
 }

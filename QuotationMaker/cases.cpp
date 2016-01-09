@@ -108,7 +108,7 @@ void Cases::run()
 		{
 			for (mit = mFunctionWithData.begin(); mit != mFunctionWithData.end(); mit++)
 			{
-				pTrader->qryPosition((*mit).second);
+				pTrader->qryAndClosePosition((*mit).second);
 			}			
 		}	
 	}
