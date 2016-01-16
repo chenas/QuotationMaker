@@ -450,6 +450,11 @@ void Cases::sendOrderRandom(vector<PriceData *> data)
 	{
 		dataIndex = Random(data.size());
 		_volume = Random(data[0]->MaxVolume) + 1;
+		if (data[dataIndex]->TickCount == 0)
+		{
+			data.erase(data.begin() + dataIndex);
+			continue;
+		}				
 		if(Random(2))
 		{
 			price = data[dataIndex]->CurPrice + (Random(data[dataIndex]->TickCount)+1) * data[dataIndex]->PriceTick;
