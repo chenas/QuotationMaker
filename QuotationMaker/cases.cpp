@@ -312,7 +312,7 @@ void Cases::holdChane(vector<PriceData *> data, bool isUp)
 	double changePrice = 0;  //ÕÇµø·ù¶ÈÖµ
 	if (data[0]->TimeOut == 0)  //Ë²¼äÕÇ/µø
 	{
-		if (data[0]->Change = 100)//ÕÇÍ£/µøÍ£
+		if (data[0]->Change == 100)//ÕÇÍ£/µøÍ£
 		{
 			for (unsigned int i=0; i<data.size(); i++)
 			{
