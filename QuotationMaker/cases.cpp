@@ -448,6 +448,11 @@ void Cases::sendOrderRandom(vector<PriceData *> data)
 
 	while(dwUsed <= (data[0]->TimeOut * 1000))
 	{
+		if (data.size() < 1)
+		{
+			std::cout << "Change ̫С" << std::endl;
+			return;
+		}
 		dataIndex = Random(data.size());
 		_volume = Random(data[0]->MaxVolume) + 1;
 		if (data[dataIndex]->TickCount == 0)
