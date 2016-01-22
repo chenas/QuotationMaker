@@ -8,6 +8,20 @@ DWORD g_dwWritenSize = 0;
 
 void main()
 {
+	while (true)
+	{
+		system("linux2win.bat");
+		fstream file;
+		file.open("start.txt");
+		if (file) 
+		{
+			///文件已经存在
+			break;
+		}
+	}
+	std::ofstream output("../cfg/casetime.csv", std::ios::app);
+	output << "caseno, starttime, stoptime" << std::endl;
+	output.close();
 	g_hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	g_hFile = CreateFile(TEXT("../cfg/trading_log.txt"), 
 		GENERIC_WRITE, 
@@ -22,5 +36,6 @@ void main()
 	FlushFileBuffers(g_hFile);
 	CloseHandle(g_hEvent);
 	CloseHandle(g_hFile);
+	system("win2linux.bat");
 	system("pause");
 }

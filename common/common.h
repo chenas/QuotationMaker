@@ -30,6 +30,8 @@ public:
 
 	static void log2File(const char *msg);
 
+	static void write2File(char *filePath, const char *msg);
+
 	//将内容显示在cmd上
 	static void record2Stdout(const char *instrumentId, int buySell, int openClose, int volume, double price);
 

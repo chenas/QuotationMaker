@@ -44,6 +44,8 @@ public:
 	map<int, vector<PriceData *> > getFunctionWithData();
 	vector<pair<int, vector<PriceData *>> > getVFunctionWithData();
 	
+	int getTotalTimeout();
+
 	int ID;
 	void show();
 	void show(int function);
@@ -61,6 +63,8 @@ private:
 	vector<int> vVolume;
 	///每笔单的手数，作为挂单
 	vector<int> vHoldVolume;
+	//所有功能加起来总的时间
+	int totalTimeout;
 
 	map<int, vector<PriceData *> > mFunctionWithData;
 	vector<pair<int, vector<PriceData *>> > vFunctionWithData;

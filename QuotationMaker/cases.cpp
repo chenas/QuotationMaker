@@ -7,6 +7,9 @@ string caseFilePath = "../cfg/cases.cfg";
 
 DWORD g_dwStart = 0; //功能1，2使用
 
+extern bool IsFirstOrder;
+extern std::string FirstOrderTime;
+
 Cases::Cases()
 {
 	pTrader = new Trader();
@@ -27,6 +30,7 @@ void Cases::run()
 	pMarketUtil->openMdLog();
 	for (unsigned int i=0; i<vCases.size(); i++)
 	{
+		IsFirstOrder = true;
 		Common::record2File((TimeUtil::getTimeNow() + " case:  " + StringUtil::intToStr(vCases[i]->ID) + " begin \r\n").c_str());
 		///行情开始标记
 		pMarketUtil->writeSeparator((TimeUtil::getTimeNow() + " case:  " + StringUtil::intToStr(vCases[i]->ID) + " begin").c_str());
@@ -110,7 +114,17 @@ void Cases::run()
 			{
 				pTrader->qryAndClosePosition((*mit).second);
 			}			
-		}	
+		}
+		if (false == IsFirstOrder)
+		{
+			CaseTime *ct = new CaseTime();
+			ct->setCaseNo(vCases[i]->ID);
+			ct->setStartTime(FirstOrderTime);
+			ct->setTimeout(vCases[i]->getTotalTimeout());
+			ct->setStopTime(""); //根据开始时间和timeout算出
+			ct->show();
+			delete ct;
+		}
 	}
 	pMarketUtil->closeMdLog();
 

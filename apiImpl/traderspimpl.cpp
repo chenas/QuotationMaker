@@ -61,6 +61,13 @@ std::map< std::string, CThostFtdcDepthMarketDataField > MidDepthMarketData;
 //最新深度行情
 std::map< std::string, CThostFtdcDepthMarketDataField > LastDepthMarketData;
 
+///收到第一笔成交回报标志
+///收到第一笔成交时，置为false
+bool IsFirstOrder = true;
+
+//第一笔成交时间
+std::string FirstOrderTime;
+
 void TradeRspImpl::OnFrontConnected()
 {
 	std::cerr.precision(2); 
@@ -174,7 +181,11 @@ void TradeRspImpl::OnRtnOrder(CThostFtdcOrderField *pOrder)
 	strcpy(OrderRef, pOrder->OrderRef);
 	strcpy(ExchangeID, pOrder->ExchangeID);
 	strcpy(OrderSysID, pOrder->OrderSysID);
-
+	if (true == IsFirstOrder)
+	{
+		FirstOrderTime = pOrder->InsertTime;
+		IsFirstOrder = false;
+	}
 	//std::cerr << "--->>>" << __FUNCTION__ <<std::endl;
 	//std::cerr << "InvestorID: " << pOrder->InvestorID << " InstrumentID: " << pOrder->InstrumentID 
 	//	<< " OrderStatus: " << pOrder->OrderStatus << " OrderRef" << pOrder->OrderRef 

@@ -32,6 +32,13 @@ void Common::log2File(const char* msg)
 	o_file.close();				//关闭文件
 }
 
+void write2File(char *filePath, const char *msg)
+{
+	std::ofstream o_file(filePath,std::ios::app);
+	o_file << msg << std::endl; 
+	o_file.close();				//关闭文件
+}
+
 //将内容显示在cmd上
 void Common::record2Stdout(const char *instrumentId, int buySell, int openClose, int volume, double price)
 {

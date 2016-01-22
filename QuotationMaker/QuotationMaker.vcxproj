@@ -88,6 +88,7 @@
     <ClCompile Include="..\utility\timeutil.cpp" />
     <ClCompile Include="case.cpp" />
     <ClCompile Include="cases.cpp" />
+    <ClCompile Include="casetime.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +103,7 @@
     <ClInclude Include="..\utility\timeutil.h" />
     <ClInclude Include="case.h" />
     <ClInclude Include="cases.h" />
+    <ClInclude Include="casetime.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\cfg\cases.cfg" />

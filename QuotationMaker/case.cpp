@@ -10,6 +10,7 @@ Case::Case(Trader* pTrader)
 {
 	this->pTrader = pTrader;
 	map<int, vector<PriceData *> >().swap(mFunctionWithData);
+	totalTimeout = 0;
 }
 
 map<int, vector<PriceData *> > Case::getFunctionWithData()
@@ -109,6 +110,11 @@ void Case::setTimeouts(string timeout)
 		{
 			vTimeout.push_back(vTimeout[paraSize-1]);
 		}
+	}
+	//计算总时间
+	for (int i=0; i<vTimeout.size(); i++)
+	{
+		totalTimeout += vTimeout[i];
 	}
 }
 
@@ -686,6 +692,11 @@ PriceData* Case::initPriceData(CThostFtdcDepthMarketDataField DepthMarketDataFie
 	data->HoldVolume = holdVolume;
 
 	return data;
+}
+
+int Case::getTotalTimeout()
+{
+	return this->totalTimeout;
 }
 
 CaseFactory::~CaseFactory()

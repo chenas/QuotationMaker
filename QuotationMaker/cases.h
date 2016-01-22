@@ -7,6 +7,7 @@
 #include <conio.h> 
 #include "../utility/stringutil.h"
 #include "case.h"
+#include "casetime.h"
 
 extern set<string> AllInstrumentId;
 
