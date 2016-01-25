@@ -181,7 +181,7 @@ void TradeRspImpl::OnRtnOrder(CThostFtdcOrderField *pOrder)
 	strcpy(OrderRef, pOrder->OrderRef);
 	strcpy(ExchangeID, pOrder->ExchangeID);
 	strcpy(OrderSysID, pOrder->OrderSysID);
-	if (true == IsFirstOrder)
+	if (true == IsFirstOrder && pOrder->OrderStatus == '3')
 	{
 		FirstOrderTime = pOrder->InsertTime;
 		IsFirstOrder = false;

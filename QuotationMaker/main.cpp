@@ -15,11 +15,13 @@ void main()
 		file.open("start.txt");
 		if (file) 
 		{
-			///文件已经存在
+			///文件已经存在,删除
+			file.close();			
+			remove("start.txt");
 			break;
 		}
 	}
-	std::ofstream output("../cfg/casetime.csv", std::ios::app);
+	std::ofstream output("../cfg/casetime.csv", std::ios::out);
 	output << "caseno, starttime, stoptime" << std::endl;
 	output.close();
 	g_hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
